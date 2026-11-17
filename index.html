@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PM Daily Report</title>
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0f3d5e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PM Daily">
+  <style>
+    html, body { margin: 0; height: 100%; background: #eef2f6; font-family: "IBM Plex Sans Thai", system-ui, "Segoe UI", Tahoma, sans-serif; color: #0f2233; }
+    iframe { border: 0; width: 100%; height: 100%; display: block; }
+    #msg { position: fixed; inset: 0; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; text-align: center; padding: 16px; font-size: 15px; color: #5d6d7e; pointer-events: none; }
+    #msg .spin { width: 34px; height: 34px; border: 3px solid #dfe5ec; border-top-color: #0f3d5e; border-radius: 50%; animation: s 1s linear infinite; }
+    @keyframes s { to { transform: rotate(360deg); } }
+    #help { display: none; max-width: 440px; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(15,34,51,.12); padding: 14px 16px; font-size: 14px; line-height: 1.6; text-align: left; pointer-events: auto; }
+    #help a { display: inline-block; margin-top: 8px; background: #0f3d5e; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div id="msg">
+    <div class="spin"></div>
+    <div>กำลังโหลด PM Daily Report…</div>
+    <div id="help">
+      <b>โหลดนานกว่าปกติ</b><br>
+      • ถ้าเบราว์เซอร์นี้ล็อกอิน Google หลายบัญชี ให้ใช้หน้าต่างไม่ระบุตัวตน (Ctrl+Shift+N) หรือออกจากบัญชีอื่นก่อน<br>
+      • หรือเปิดแอปโดยตรงด้วยปุ่มด้านล่าง<br>
+      <a id="direct" href="#" target="_blank" rel="noopener">เปิดแอปในแท็บใหม่</a>
+    </div>
+  </div>
+  <iframe id="app" title="PM Daily Report" allow="clipboard-write; camera"></iframe>
+  <script>
+    // ===== ลิงก์ Web App (ลงท้ายด้วย /exec) จาก Apps Script → Deploy → Manage deployments =====
+    var APP_URL = 'https://script.google.com/macros/s/AKfycbwazNnkvtHZRBDjHcIik92g7cgyjP0tsp4OvD6nd7sQqtCPjubsK0EHleHgmZcK29eL/exec';
+    // ==========================================================================================
+
+    var f = document.getElementById('app'), msg = document.getElementById('msg');
+    // ส่งต่อพารามิเตอร์ เช่น ?view=plan หรือ #supply ไปให้แอป
+    var url = APP_URL + location.search + location.hash;
+    document.getElementById('direct').href = url;
+    f.onload = function () { msg.style.display = 'none'; };
+    if (/^https:\/\/script\.google\.com\/.+\/exec$/.test(APP_URL)) f.src = url;
+    else msg.querySelector('div:nth-child(2)').textContent = 'ยังไม่ได้ใส่ลิงก์ Web App ในไฟล์ index.html';
+    setTimeout(function () { if (msg.style.display !== 'none') document.getElementById('help').style.display = 'block'; }, 20000);
+  </script>
+</body>
+</html>
